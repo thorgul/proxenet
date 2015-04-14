@@ -41,9 +41,32 @@
 /**
  *
  */
+
+static inline int proxenet_python_append_pyobj_to_path(PyObject *pPath, char *path)
+{
+	PyObject *pAddPath;
+	int retcode = 0;
+
+	pAddPath = PYTHON_FROMSTRING(path);
+	if (!pAddPath) {
+		return -1;
+	}
+
+	if (PyList_Insert(pPath, 0, pAddPath) < 0) {
+		retcode = -1;
+	}
+	Py_DECREF(pAddPath);
+
+	return retcode;
+}
+
+
+/**
+ *
+ */
 static int proxenet_python_append_path()
 {
-	PyObject *pPath, *pAddPath;
+	PyObject *pPath;
 	int retcode = 0;
 
 	pPath = PySys_GetObject("path");
@@ -56,16 +79,9 @@ static int proxenet_python_append_path()
 		return -1;
 	}
 
-	pAddPath = PYTHON_FROMSTRING(cfg->plugins_path);
-	if (!pAddPath) {
-		return -1;
-	}
-
-	if (PyList_Insert(pPath, 0, pAddPath) < 0) {
-		retcode = -1;
-	}
-	Py_DECREF(pAddPath);
-
+	retcode = proxenet_python_append_pyobj_to_path(pPath, cfg->plugins_path);
+	retcode = proxenet_python_append_pyobj_to_path(pPath, cfg->autoload_path);
+	
 	return retcode;
 }
 
