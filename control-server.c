@@ -419,6 +419,7 @@ void plugin_cmd(sock_t fd, char *options, unsigned int nb_options)
                 return;
         }
         if (strcmp(ptr, "set") == 0) {
+                ptr = strtok(NULL, " \n");
                 res = plugin_cmd_set(fd, ptr);
                 if(res < 0){
                         xlog(LOG_ERROR, "%s\n", "An error occured during plugin setting");
@@ -426,6 +427,7 @@ void plugin_cmd(sock_t fd, char *options, unsigned int nb_options)
                 return;
         }
         if (strcmp(ptr, "load") == 0) {
+                ptr = strtok(NULL, " \n");
                 res = plugin_cmd_load(fd, ptr);
                 if(res < 0){
                         xlog(LOG_ERROR, "%s\n", "An error occured during plugin loading");
